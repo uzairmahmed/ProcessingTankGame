@@ -13,12 +13,9 @@ Uzair - Tank Game Version 0.8
  
  - Shooting the the turret arm does not damage the
    turret -- It only makes it ANGRY
-
- - Only the MousePos can be used to aim -- both tanks
-   so... Rock, Paper, Scissors on who gets the mouse?
    
  - Tracer code is somewhat inneficient. For better performance
-   comment out line 171.
+   comment out line 172.
 */
 
 //-----------------Constants-----------------//
@@ -32,6 +29,9 @@ AudioPlayer Block;
 AudioPlayer Dead;
 AudioPlayer Time;
 AudioPlayer Win;
+AudioPlayer Launch;
+AudioPlayer Powerup;
+
 
 //Initialize Fonts for display on Screen
 PFont f;
@@ -104,11 +104,12 @@ void init() {
   Dead = minim.loadFile("dead.wav");
   Time = minim.loadFile("time.wav");
   Win = minim.loadFile("win.wav");
-
+  Launch = minim.loadFile("launch.wav");
+  Powerup = minim.loadFile("powerup.wav");
   
   //Initialize Player Turrets
-  turret1 = new Turret(new PVector(width/8,height), 0, 255, 32, 32);
-  turret2 = new Turret(new PVector((width/8)*7,height), 1, 32, 32, 255);
+  turret1 = new Turret(new PVector(width/8,height), 0, 255, 32, 32, 6);
+  turret2 = new Turret(new PVector((width/8)*7,height), 1, 32, 32, 255, 4);
   
   //Initialize powerup block
   powerup = new UnlAmmo(new PVector(width/2, 50), new PVector(30,30));
@@ -141,7 +142,7 @@ void startScreen(){
   text("UZAIR'S TANK GAME",width/2,100);
   text ("HOW TO PLAY", width/2, 200);
   text ("use arrow keys/wasd to move and aim.", width/2, height/2);
-  text ("(Aim both tanks with mouse...for now.)", width/2, height/2+100);
+  text ("Hit the powerup for infinite ammo!", width/2, height/2+100);
   text("Click to Play",width/2,height-25);
   if(mousePressed){
       gameState = 1;
@@ -278,6 +279,7 @@ void bulletRunner(){
     //Look for hitdetection between a powerup and bullet1
     if(hitDetect(bb1.pos, powerup.pos, 10, powerup.siz.x)){
       powerup.activated1 = true;
+      Powerup.play(0);
       powerup.deactivate();
     }
   }
@@ -306,6 +308,7 @@ void bulletRunner(){
     //Look for hitdetection between a powerup and bullet2
     if(hitDetect(bb2.pos, powerup.pos, 10,powerup.siz.x)){
       powerup.activated2 = true;
+      Powerup.play(0);
       powerup.deactivate();
     }
   } 
@@ -392,11 +395,11 @@ void inGameKeyPressedManager(){
     else if (key == 'd'&&(turret1.pos.x < (width/2)-25-25)){
       turret1.pos.x += 10;
     }
-    else if (key == 'w'){
-      //aim up       //------------this needs work------------------
+    else if ((key == 'w') && (turret1.dir.x > 0)){
+      turret1.elevation -= 0.05;
     }
-    else if (key == 's'){
-      //aim down    //-------------this needs work------------------
+    else if ((key == 's') && (turret1.dir.x < 49.99)){
+      turret1.elevation += 0.05;
     }
     //---------------------------------------------------------------
     if (keyCode == LEFT && turret2.pos.x > (width/2)+25+25){
@@ -405,11 +408,11 @@ void inGameKeyPressedManager(){
     else if (keyCode == RIGHT && turret2.pos.x < width-25){
       turret2.pos.x += 10;
     }
-    else if (keyCode == UP){
-      //aim up      //------------this needs work------------------
+    else if ((keyCode == UP) && (turret2.dir.x < 0)){
+      turret2.elevation += 0.05;
     }
-    else if (keyCode == DOWN){
-      //aim down    //------------this needs work------------------
+    else if ((keyCode == DOWN) && (turret2.dir.x > -49.99)){
+      turret2.elevation -= 0.05;
     }
   }
 }
@@ -441,6 +444,7 @@ void keyPressed(){
   if (keyCode == ' '){
     if (ammo-turret1Ammo > 0){    
       //Launch bullet
+      Launch.play(1);
       bullets1.add(new Bullet(turret1.pos, turret1.dir));
       if (powerup.activated1 == false){
       turret1Ammo++;
@@ -452,6 +456,7 @@ void keyPressed(){
   
   if (keyCode == ENTER){
     if (ammo-turret2Ammo > 0){
+      Launch.play(1);
       bullets2.add(new Bullet(turret2.pos, turret2.dir));
       if (powerup.activated2 == false){
       turret2Ammo++;

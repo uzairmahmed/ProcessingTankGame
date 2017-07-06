@@ -13,27 +13,28 @@ class Turret{
   int turretColorG; 
   int turretColorB;
   int fieldSide;
+  float elevation;
   
   int helthbarW = 300;
   int helthbarH = 50;
   int indHBlock = 300/health;
   
   
-  public Turret(PVector turretPos, int side, int R, int G, int B){
+  public Turret(PVector turretPos, int side, int R, int G, int B, float e){
     pos  = turretPos;
     fieldSide = side;
     turretColorR = R; 
     turretColorG = G; 
     turretColorB = B;
+    elevation = e;
   }
   void update(){
-    mPos.set(mouseX, mouseY);
-    dir = PVector.sub(mPos, pos);
-    dir.normalize();
+    dir.set(cos(elevation), sin(elevation));
     dir.mult(50);
   }
   
   void draw(){
+    print (dir + "\n");
     //base
     fill(turretColorR,turretColorG,turretColorB);
     ellipse(pos.x, pos.y, 40, 40);
