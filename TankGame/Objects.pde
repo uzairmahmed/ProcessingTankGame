@@ -43,7 +43,7 @@ void blockRunner() {
       }
     }
   }
-    //Go through each block 
+  //Go through each block 
   for (int i = 0; i < groundBlocks.size(); i++) {
     //Make a Block reference
     Block gb = groundBlocks.get(i);
@@ -84,7 +84,7 @@ void blockRunner() {
       }
     }
   }
- //Go through each block 
+  //Go through each block 
   for (int i = 0; i < skyBlocks.size(); i++) {
     //Make a Block reference
     Block sb = skyBlocks.get(i);
@@ -125,11 +125,16 @@ void blockRunner() {
       }
     }
   }
-  
+
   //Spawn new blocks if blockList is empty.
   if (groundBlocks.size() == 0) {
     for (int i = 0; i <= 3; i++) {
-      groundBlocks.add(new Block(groundBlocks));
+      groundBlocks.add(new Block(groundBlocks,0));
+    }
+  }
+  if (skyBlocks.size() == 0) {
+    for (int i = 0; i <= 3; i++) {
+      skyBlocks.add(new Block(skyBlocks,1));
     }
   }
 }

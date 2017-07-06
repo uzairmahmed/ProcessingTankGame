@@ -21,7 +21,7 @@ void game() {
   background(150);
   textFont(f, 35);
   fill(200);
-  rect(width/2, 80, width, 160);
+  rect(width/2, 80, width, 150);
   fill(0);
   int tim = timer(60000);
   surface.setTitle("Tank Game. Time Left:" + str(tim));

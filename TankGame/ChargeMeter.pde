@@ -47,7 +47,6 @@ class ChargeMeter {
 
   //a getter method for charge that is returned as a percentage
   float getCharge() {
-    println (charge);
     return charge/siz.y;
   }
 

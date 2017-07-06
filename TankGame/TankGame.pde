@@ -1,8 +1,7 @@
 /*
-  NOTE - ALL I DID IN THIS REV WAS SEPARTE THE FUNCTIONS FOR ORGANIZATION
   Uzair Ahmed
-  Tank Game Version 1.4 - SUMMATIVE EDITION
-  12 June, 2017
+ Tank Game Version 1.6 - SUMMATIVE EDITION
+ 12 June, 2017
  
  - Use Arrow keys/WASD to move.
  - Destroy the other turret by breaking through the wall
@@ -117,7 +116,7 @@ void init() {
   //Initialize Chargers
   shotCharge1 = new ChargeMeter(new PVector(10, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
   shotCharge2 = new ChargeMeter(new PVector(width-20, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
-  
+
   jumpCharge1 = new ChargeMeter(new PVector(30, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
   jumpCharge2 = new ChargeMeter(new PVector(width-50, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
 
@@ -147,9 +146,9 @@ void inGameKeyPressedManager() {
       turret1.pos.x -= 10;
     } else if (key == 'd'&&(turret1.pos.x < (width/2)-25-25)) {
       turret1.pos.x += 10;
-    } else if ((key == 'w') && (turret1.dir.x > 0)) {
+    } else if (key == 'w') {
       turret1.elevation -= 0.05;
-    } else if ((key == 's') && (turret1.dir.x < 49.99)) {
+    } else if (key == 's') {
       turret1.elevation += 0.05;
     }
     //---------------------------------------------------------------
@@ -157,9 +156,9 @@ void inGameKeyPressedManager() {
       turret2.pos.x -= 10;
     } else if (keyCode == RIGHT && turret2.pos.x < width-25) {
       turret2.pos.x += 10;
-    } else if ((keyCode == UP) && (turret2.dir.x < 0)) {
+    } else if (keyCode == UP){
       turret2.elevation += 0.05;
-    } else if ((keyCode == DOWN) && (turret2.dir.x > -49.99)) {
+    } else if (keyCode == DOWN) {
       turret2.elevation -= 0.05;
     }
   }
