@@ -1,20 +1,21 @@
-/*
-  Mr. Rowbottom's - ChargeMeter class modded by Uzair
- */
+//
+
 class ChargeMeter {
 
   PVector pos;
   PVector siz;
 
   float chargeRate; //how fast it charges
+  // char chargeKey;//the key that is used to charge the meter
   color chargeCol;
   color chargeStr;
 
   float charge;
   boolean charging; //whether the meter is charging or not
 
+  // boolean didFire;
 
-  ChargeMeter(PVector _pos, PVector _siz, color _chargeStr, float _chargeRate) {
+  ChargeMeter(PVector _pos, PVector _siz, color _chargeStr, float _chargeRate) {//,char _chargeKey){
     pos = _pos;
     siz = _siz;
     chargeStr = _chargeStr;
@@ -22,34 +23,52 @@ class ChargeMeter {
     //chargeKey = _chargeKey;
     charge = 0;
     charging = false;
+    //  didFire = false;
   }
-  
-  void fluctuating() {
+
+  //void keyPressed(){
+  //if (key == chargeKey){
+  //    charging = true;
+  //}
+  //}
+
+  //void keyReleased(){
+  // if (key == chargeKey){
+  //     charging = false;
+  // }   
+  //didFire = true;
+  //}
+
+  // boolean checkFire(){
+  //   if (didFire){
+  //     didFire = false;
+  //      return true;
+  //   }
+  //   return false;
+  // }
+
+  void charging() {
     if (charging) {
       charge += chargeRate; 
       if (charge > siz.y) {
         charging = false;
+        //charge = siz.y;
       }
     } else if (!charging) {
       charge -= chargeRate; 
       if (charge < 0) {
         charging = true;
+        //charge = siz.y;
       }
     }
-  }
-  
-  void charging() {
-    charge += chargeRate; 
-    if (charge > siz.y) {
-      charge = siz.y;
-    } 
   }
 
   //a getter method for charge that is returned as a percentage
   float getCharge() {
-    println (charge);
     return charge/siz.y;
   }
+
+
 
   void draw() {
     rectMode(CORNER);
@@ -66,14 +85,13 @@ class ChargeMeter {
     stroke(0);
     rectMode(CENTER);  
 
-
     if (getCharge() > 0.0) {
       chargeCol = color(255, 0, 0);
     }
     if (getCharge() > 0.5) {
       chargeCol = color(255, 255, 0);
     }
-    if (getCharge() > 0.75) {
+    if (getCharge() > 1.0) {
       chargeCol = color(0, 255, 0);
     }
   }

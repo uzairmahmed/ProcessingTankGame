@@ -8,8 +8,7 @@ class Tracer {
   PVector vel   = new PVector();
   PVector dir   = new PVector();
   PVector grav  = new PVector(0, 2.23);
-  ArrayList <Tracer> tracerPath;
-  float gravMult = 0;
+ // ArrayList <Tracer> tracerPath;
 
   public Tracer(PVector turretPos, PVector turretDir) {
     tPos = turretPos;
@@ -18,13 +17,12 @@ class Tracer {
     vel.set(dir);
   }
   void update() {
-    grav.y -= (gravMult);
     vel.add(grav);
     pos.add(vel);
   }
   void draw() {
-    fill(0);
-    ellipse(pos.x, pos.y, 3, 3);
+    fill(255);
+    ellipse(pos.x, pos.y, 2, 2);
   }
   void deactivate() {
     pos.set(-1000, -1000);
