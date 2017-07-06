@@ -19,6 +19,8 @@ class Turret {
   int helthbarH = 50;
   int indHBlock = 300/health;
 
+  boolean move = false;
+
 
   public Turret(PVector turretPos, int side, int R, int G, int B, float e) {
     pos  = turretPos;
@@ -71,7 +73,27 @@ class Turret {
       }
     }
   }
-  
+
+  void switchPositions() {
+    if (move == true) {
+      pos.add(dir);
+      if (pos.y < 150) {
+        pos.y = 150;
+        move = false;
+      } else if (pos.y > height) {
+        pos.y = height;
+        move = false;
+      }
+     if (pos.x < 0){
+       pos.x = 0;
+       dir.x*=-1;
+     }
+     if (pos.x > width){
+       pos.x = width;
+       dir.x*=-1;
+     }
+    }
+  }
 
   void takeDamage() {
     if (health < 1) {

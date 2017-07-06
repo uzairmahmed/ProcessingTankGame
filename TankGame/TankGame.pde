@@ -1,6 +1,6 @@
 /*
   Uzair Ahmed
- Tank Game Version 1.6 - SUMMATIVE EDITION
+ Tank Game Version 1.8 - SUMMATIVE EDITION
  12 June, 2017
  
  - Use Arrow keys/WASD to move.
@@ -150,13 +150,18 @@ void inGameKeyPressedManager() {
       turret1.elevation -= 0.05;
     } else if (key == 's') {
       turret1.elevation += 0.05;
+    } else if (key == 'q') {
+      if (jumpCharge1.getCharge() > 0.75) {
+        turret1.move=true;
+        jumpCharge1.charge = 0;
+      }
     }
     //---------------------------------------------------------------
     if (keyCode == LEFT && turret2.pos.x > (width/2)+25+25) {
       turret2.pos.x -= 10;
     } else if (keyCode == RIGHT && turret2.pos.x < width-25) {
       turret2.pos.x += 10;
-    } else if (keyCode == UP){
+    } else if (keyCode == UP) {
       turret2.elevation += 0.05;
     } else if (keyCode == DOWN) {
       turret2.elevation -= 0.05;

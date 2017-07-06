@@ -16,7 +16,11 @@ class UnlAmmo {
   }
 
   void update() {
-    sym.x+=1;
+    pos.x+=10;
+    sym.x+=10;
+    if (pos.x > width){
+      pos.x = 0;
+    }
     if (sym.x == pos.x + siz.x/2) {
       sym.x = pos.x-(siz.x/2);
     }

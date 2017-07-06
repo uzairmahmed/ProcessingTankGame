@@ -13,6 +13,7 @@ class ChargeMeter {
   float charge;
   boolean charging; //whether the meter is charging or not
 
+  int type;
 
   ChargeMeter(PVector _pos, PVector _siz, color _chargeStr, float _chargeRate) {
     pos = _pos;
@@ -23,8 +24,9 @@ class ChargeMeter {
     charge = 0;
     charging = false;
   }
-  
+
   void fluctuating() {
+    type = 1;
     if (charging) {
       charge += chargeRate; 
       if (charge > siz.y) {
@@ -37,12 +39,13 @@ class ChargeMeter {
       }
     }
   }
-  
+
   void charging() {
+    type = 0;
     charge += chargeRate; 
     if (charge > siz.y) {
       charge = siz.y;
-    } 
+    }
   }
 
   //a getter method for charge that is returned as a percentage
@@ -65,15 +68,27 @@ class ChargeMeter {
     stroke(0);
     rectMode(CENTER);  
 
-
-    if (getCharge() > 0.0) {
-      chargeCol = color(255, 0, 0);
+    if (type == 0) {
+      if (getCharge() > 0.0) {
+        chargeCol = color(255, 0, 0);
+      }
+      if (getCharge() > 0.5) {
+        chargeCol = color(255, 255, 0);
+      }
+      if (getCharge() > 0.75) {
+        chargeCol = color(0, 255, 0);
+      }
     }
-    if (getCharge() > 0.5) {
-      chargeCol = color(255, 255, 0);
-    }
-    if (getCharge() > 0.75) {
-      chargeCol = color(0, 255, 0);
+    if (type == 1) {
+      if (getCharge() > 0.0) {
+        chargeCol = color(255, 0, 0);
+      }
+      if (getCharge() > 0.5) {
+        chargeCol = color(0, 255, 0);
+      }
+      if (getCharge() > 0.75) {
+        chargeCol = color(255, 0, 0);
+      }
     }
   }
 }

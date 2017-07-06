@@ -242,6 +242,7 @@ void tracerRunner() {
 void turretRunner() {
   //Update, draw and check if the turret is alive
   turret1.update();
+  turret1.switchPositions();
   turret1.draw();
   turret2.update();
   turret2.draw();  
