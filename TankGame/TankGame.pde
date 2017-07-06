@@ -10,7 +10,6 @@ AudioPlayer Shoot;
 //ArrayLists for Blocks and Explosions
 ArrayList<Block> blocks;
 ArrayList<Explosion> explosions;
-ArrayList<Bullet> bullets;
 
 //Array to hold Explosion Images
 PImage [] explosion;
@@ -20,7 +19,6 @@ PVector mPos1;
 PVector tPos1;
 PVector pPos1;
 PVector tDir1;
-PVector turr1;
 //Mouse, Turret, and Projectile Positions / Direction of Player 2
 PVector mPos2;
 PVector tPos2;
@@ -69,7 +67,6 @@ void init() {
   tPos1 = new PVector(width/8, height);
   pPos1 = new PVector(-1000, -1000);
   tDir1 = new PVector(0,0);
-  turr1 = new PVector(150,550);
   
   mPos2 = new PVector();
   tPos2 = new PVector(width/8, height);
@@ -105,7 +102,7 @@ void keyPressed(){
   
   if (keyCode == ENTER){
     // Declare Explosion Size and Position
-    PVector eSiz = new PVector (100,100);
+    PVector eSiz = new PVector (200, 200);
     PVector ePos = new PVector (tPos2.x + tDir2.x + (tDir2.x/2), tPos2.y + tDir2.y+(tDir2.y/2));
   
     //EXPLODE STUFF
@@ -113,7 +110,6 @@ void keyPressed(){
     Shoot.play(0);
     
     //Launch Projectile
-    bullets.add(new Bullet())
     pPos2.set(tPos2);
     pVel.set(tDir2);
   }
@@ -132,12 +128,12 @@ void draw() {
     //draw each block
     b.draw();
     
-    if (hitDetect(pPos1, b.pos, 10, blockSize.x)){
+    if (hitDetect(pPos1, b.pos, 10, 100)){
       b.takeDamage();
       pPos1.set(-1000,-1000);
       delay(10);
     }
-    if (hitDetect(pPos2, b.pos, 10, blockSize.x)){
+    if (hitDetect(pPos2, b.pos, 10, 100)){
       b.takeDamage();
       pPos2.set(-1000,-1000);
       delay(10);
@@ -167,10 +163,10 @@ void draw() {
     pPos2.add(pVel);
   }
   
-  //mPos1.set(mouseX, mouseY);
-  //tDir1 = PVector.sub(mPos1,tPos1);
-  //tDir1.normalize();
-  //tDir1.mult(50);  
+  mPos1.set(mouseX, mouseY);
+  tDir1 = PVector.sub(mPos1,tPos1);
+  tDir1.normalize();
+  tDir1.mult(50);  
  
   mPos2.set(mouseX, mouseY);
   tDir2 = PVector.sub(mPos2,tPos2);
@@ -182,12 +178,12 @@ void draw() {
   ellipse(tPos1.x, tPos1.y, 40, 40);
   //terminalArm
   strokeWeight(5);
-  line(tPos1.x, tPos1.y, -tPos1.x + turr1.x, tPos1.y + turr1.y);
+  line(tPos1.x, tPos1.y, tPos1.x + tDir1.x, tPos1.y + tDir1.y);
   //dotSight
   fill(255, 0, 0);
   ellipse(tPos1.x + tDir1.x, tPos1.y + tDir1.y, 10, 10);
   //bullet
-  //ellipse(pPos1.x, pPos1.y, 10, 10);
+  ellipse(pPos1.x, pPos1.y, 10, 10);
   
   
   //circle
@@ -199,9 +195,8 @@ void draw() {
   //dotSight
   fill(255, 0, 0);
   ellipse(tPos2.x + tDir2.x, tPos2.y + tDir2.y, 10, 10);
-  print ((tPos2.y + tDir2.y)+"\n");
   //bullet
-  //ellipse(pPos2.x, pPos2.y, 10, 10);
+  ellipse(pPos2.x, pPos2.y, 10, 10);
   
   
   
@@ -209,17 +204,15 @@ void draw() {
     if (key == 'a' && tPos1.x > 9){
       tPos1.x -= 10;
     }
-    else if (key == 'd'&& tPos1.x < ((width/2)-(blockSize.x/2)-9)){
+    else if (key == 'd'&& tPos1.x < width-9){
       tPos1.x += 10;
     }
     else if (key == 'w'){
-      turr1.x += 10;
-      turr1.y += 10;
+      //tPos1.y -= 100;
       
     }
     else if (key == 's'){
-      turr1.x -= 10;
-      turr1.y -= 10;
+      //tPos1.y += 100;
     }
     
     
