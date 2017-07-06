@@ -1,11 +1,21 @@
 /*
   Uzair Ahmed
- Tank Game Version 1.8 - SUMMATIVE EDITION
- 12 June, 2017
+ Tank Game Version 2 - SUMMATIVE EDITION
+ 15 June, 2017
  
- - Use Arrow keys/WASD to move.
+ - Use Arrow keys/WASD to move. 
+ - Use Q or / to launch to the other side.
+ - Use Space and Enter to shoot.
+ 
+ - The outside charger shows your bullet power. 0% will shoot down,
+50% will shot straight, 100% will shoot up.
+
+ - The inside charger shows your jump charge progress if your bar 
+is at 75%,you can shoot up/down.
+
  - Destroy the other turret by breaking through the wall
  and shooting the turret in under sixty seconds.
+ - Get the powerup for unlimited ammo.
  
  KNOWN BUGS:
  - Two people cannot move at the same time, because 
@@ -15,8 +25,10 @@
  - Shooting the the turret arm does not damage the
  turret -- It only makes it ANGRY
  
- - Tracer code is somewhat inneficient. For better performance
- comment out line ---.
+ - Tracer code is NOW VERY inneficient. For better performance
+ comment out the tracer class caller.
+ 
+ - For even better performance comment out the explosion class caller.
  */
 
 //-----------------Constants-----------------//
@@ -114,14 +126,14 @@ void init() {
   turret2 = new Turret(new PVector((width/8)*7, height), 1, 32, 32, 255, 4);
 
   //Initialize Chargers
-  shotCharge1 = new ChargeMeter(new PVector(10, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
-  shotCharge2 = new ChargeMeter(new PVector(width-20, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
+  shotCharge1 = new ChargeMeter(new PVector(25, 25), new PVector(10, 100), color(255, 0, 255), 0.75);
+  shotCharge2 = new ChargeMeter(new PVector(width-35, 25), new PVector(10, 100), color(255, 0, 255), 0.75);
 
-  jumpCharge1 = new ChargeMeter(new PVector(30, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
-  jumpCharge2 = new ChargeMeter(new PVector(width-50, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
+  jumpCharge1 = new ChargeMeter(new PVector(45, 25), new PVector(10, 100), color(0, 255, 255), 0.5);
+  jumpCharge2 = new ChargeMeter(new PVector(width-55, 25), new PVector(10, 100), color(0, 255, 255), 0.5);
 
   //Initialize powerup block
-  powerup = new UnlAmmo(new PVector(width/2, height/2), new PVector(30, 30));
+  powerup = new UnlAmmo(new PVector(width/2, 425), new PVector(30, 30));
 }
 
 //Runs repeatedly, used as a gameState manager
@@ -165,6 +177,11 @@ void inGameKeyPressedManager() {
       turret2.elevation += 0.05;
     } else if (keyCode == DOWN) {
       turret2.elevation -= 0.05;
+    } else if (key == '/') {
+      if (jumpCharge2.getCharge() > 0.75) {
+        turret2.move=true;
+        jumpCharge2.charge = 0;
+      }
     }
   }
 }

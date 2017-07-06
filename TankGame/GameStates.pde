@@ -6,7 +6,7 @@ void startScreen() {
   background(0);
   textFont(f, 48);
   fill(255);
-  text("UZAIR'S TANK GAME", width/2, 100);
+  text("UZAIR'S TANK GAME (v.2!)", width/2, 100);
   text ("HOW TO PLAY", width/2, 200);
   text ("use arrow keys/wasd to move and aim.", width/2, height/2);
   text ("Hit the powerup for infinite ammo!", width/2, height/2+100);
