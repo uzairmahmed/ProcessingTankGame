@@ -1,9 +1,25 @@
 /*
-Uzair
-TODO:
-use arrow keys to aim
-*/
+Uzair - Tank Game Version 0.8
+19 May, 3017
 
+ - Use Arrow keys/WASD to move.
+ - Destroy the other turret by breaking through the wall
+   and shooting the turret in under sixty seconds.
+ 
+ KNOWN BUGS:
+ - Two people cannot move at the same time, because 
+   processing can only process-(haha get it?) one function
+   at a time.
+ 
+ - Shooting the the turret arm does not damage the
+   turret -- It only makes it ANGRY
+
+ - Only the MousePos can be used to aim -- both tanks
+   so... Rock, Paper, Scissors on who gets the mouse?
+   
+ - Tracer code is somewhat inneficient. For better performance
+   comment out line 171.
+*/
 
 //-----------------Constants-----------------//
 
@@ -20,11 +36,17 @@ AudioPlayer Win;
 //Initialize Fonts for display on Screen
 PFont f;
 
+//Tracer Booleans
+Boolean check1 = false;
+Boolean check2 = false;
+
 //ArrayLists for Blocks, Explosions, and Bullets      
 ArrayList<Block> blocks;
 ArrayList<Explosion> explosions;
 ArrayList<Bullet> bullets1;
 ArrayList<Bullet> bullets2;
+ArrayList<Tracer> tracer1;
+ArrayList<Tracer> tracer2;
 
 //Import Turret Objects
 Turret turret1;
@@ -36,10 +58,7 @@ UnlAmmo powerup;
 //Array to hold Explosion Images
 PImage [] explosion;
 
-//Velocity and MousePos PVector Initializations
-PVector pVel;
-PVector mPos;
-
+//Int Values for Ammo
 int ammo = 100;
 int turret1Ammo = 0;
 int turret2Ammo = 0;
@@ -54,9 +73,10 @@ int gameState = 0;
 //Screen and Game Setup
 void setup() {
   size(1200, 600);
-  f = loadFont("ComicSansMS-48.vlw");
   rectMode(CENTER);
   imageMode(CENTER);
+  textAlign(CENTER);
+  f = loadFont("ComicSansMS-48.vlw");
   //Run init function
   init();
 }
@@ -68,6 +88,8 @@ void init() {
   explosions = new ArrayList<Explosion>();
   bullets1   = new ArrayList<Bullet>   ();
   bullets2   = new ArrayList<Bullet>   ();
+  tracer1    = new ArrayList<Tracer>   ();
+  tracer2    = new ArrayList<Tracer>   ();
 
   //Load Explosion Images 
   explosion = new PImage[6];
@@ -75,7 +97,7 @@ void init() {
     explosion[i]= loadImage("explo"+i+".png");
   }
   
-  //Initialize/Load Audio
+  //Initialize/Load Audio Files
   minim = new Minim(this);
   Shoot = minim.loadFile("shoot.wav");
   Block = minim.loadFile("block.wav");
@@ -102,6 +124,8 @@ void draw() {
   end1();
   } else if (gameState == 3){
   end2();
+  } else if (gameState == 4){
+  end3();
   }
 }
 
@@ -114,11 +138,13 @@ void startScreen(){
   background(0);
   textFont(f,48);
   fill(255);
-  text("TANK GAME (btw, the timer's already running",100,100);
-  text ("HOW TO PLAY: youll figure it out", width/2-500, height/2);
-  text ("Press any key to continue",0, height-100);
-  if (keyPressed){
-  gameState = 1;
+  text("UZAIR'S TANK GAME",width/2,100);
+  text ("HOW TO PLAY", width/2, 200);
+  text ("use arrow keys/wasd to move and aim.", width/2, height/2);
+  text ("(Aim both tanks with mouse...for now.)", width/2, height/2+100);
+  text("Click to Play",width/2,height-25);
+  if(mousePressed){
+      gameState = 1;
   }
 }
 
@@ -137,11 +163,12 @@ void game(){
   gameOverManager();
   }
   
-  text(((ammo-turret1Ammo) + "/" + ammo), 50,150);
-  text(((ammo-turret2Ammo) + "/" + ammo), width-250,150);
+  text(((ammo-turret1Ammo) + "/" + ammo), width*0.25,150);
+  text(((ammo-turret2Ammo) + "/" + ammo), width*0.75,150);
   //Manager for all things respective to thier names.
   blockRunner();
   explosionRunner();
+  tracerRunner(); //<-------------------------------------Comment this line for better performance. 
   bulletRunner();
   turretRunner();
   powerupRunner();
@@ -150,39 +177,48 @@ void game(){
 
 void end1(){
   background(255);
-  text("ONE WINS", width/2, height/2);
+  text("ONE WINS!", width/2, height/2);
   Win.play(0);
   delay(6000);
 }
 
 void end2(){
   background(255);
-  text("TWO WINS", width/2, height/2);
+  text("TWO WINS!", width/2, height/2);
   Win.play(0);
   delay(6000);
+}
 
+void end3(){
+  background(255);
+  text("TIE!", width/2, height/2);
+  Win.play(0);
+  delay(6000);
 }
 
 
 //-----------------Object Managers-----------------//
 
-
+//Block Class Manager
 void blockRunner(){
-  //use a forloop to go through each block 
+  //Go through each block 
   for (int i = 0; i < blocks.size(); i++) {
-    //make a temp Block reference
+    //Make a Block reference
     Block b = blocks.get(i);
-    //update each block
+    //Update block
     b.update();
-    //check each block 
+    //Check block 
     b.check();
-    //draw each block
+    //Draw block
     b.draw();
     
     //Go through each bullet1 to check if it has hit the block in question.
     for (int j = 0; j<bullets1.size(); j++){
+      //Make a Bullet Reference
       Bullet bbcheck1 = bullets1.get(j);
+      //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck1.pos, b.pos, 10, 100)){
+        //Run animation, take block damage, deactivate bullet.
         explode(b.pos,100,2);
         b.takeDamage();
         bbcheck1.deactivate();
@@ -193,8 +229,11 @@ void blockRunner(){
     
     //Go through each bullet2 to check if it has hit the block in question.
     for (int k = 0; k<bullets2.size(); k++){
+      //Make a Bullet Reference
       Bullet bbcheck2 = bullets2.get(k);
+      //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck2.pos, b.pos, 10, 100)){
+        //Run animation, take block damage, deactivate bullet.
         explode(b.pos,100,2);
         b.takeDamage();
         bbcheck2.deactivate();
@@ -203,6 +242,7 @@ void blockRunner(){
       }
     }
   }
+  //Spawn new blocks if blockList is empty.
   if (blocks.size() == 0){
     for (int i = 0; i <= 8; i++){
       blocks.add(new Block(blocks));
@@ -210,9 +250,70 @@ void blockRunner(){
   }
 }
 
+//Bullet Class Manager
+void bulletRunner(){
+ //Go through each player 1 bullet.
+  for (int i = 0; i<bullets1.size(); i++){
+    Bullet bb1 = bullets1.get(i);
+    bb1.update();
+    bb1.draw();
+    //If the bullet leaves the screen, deactivate it.
+    if ((bb1.pos.y > height)||(bb1.pos.x > width)|| (bb1.pos.x < 0)){
+      bb1.deactivate();
+      bullets1.remove(bb1);
+    }
+    //Look for Hitdetection between a turret and bullet1
+    if(hitDetect(bb1.pos, turret1.pos, 10,80)){
+      explode(turret1.pos,160,1);
+      turret1.takeDamage();
+      bb1.deactivate();
+      bullets1.remove(bb1);
+    }
+    if(hitDetect(bb1.pos, turret2.pos, 10,80)){
+      explode(turret2.pos,160,1);
+      turret2.takeDamage();
+      bb1.deactivate();
+      bullets1.remove(bb1);
+    }
+    //Look for hitdetection between a powerup and bullet1
+    if(hitDetect(bb1.pos, powerup.pos, 10, powerup.siz.x)){
+      powerup.activated1 = true;
+      powerup.deactivate();
+    }
+  }
+  //Go through each player 2 bullet.
+  for (int i = 0; i<bullets2.size(); i++){
+    Bullet bb2 = bullets2.get(i);
+    bb2.update();
+    bb2.draw();
+    if ((bb2.pos.y > height)||(bb2.pos.x > width)|| (bb2.pos.x < 0)){
+      bb2.deactivate();
+      bullets1.remove(bb2);
+    }
+    //Look for hitdetection between a turret and bullet2
+    if(hitDetect(bb2.pos, turret1.pos, 10,80)){
+      explode(turret1.pos,160,1);
+      turret1.takeDamage();
+      bb2.deactivate();
+      bullets2.remove(bb2);
+    }
+    if(hitDetect(bb2.pos, turret2.pos, 10,80)){
+      explode(turret2.pos,160,1);
+      turret2.takeDamage();
+      bb2.deactivate();
+      bullets2.remove(bb2);
+    }
+    //Look for hitdetection between a powerup and bullet2
+    if(hitDetect(bb2.pos, powerup.pos, 10,powerup.siz.x)){
+      powerup.activated2 = true;
+      powerup.deactivate();
+    }
+  } 
+}
 
+//Explosion Class Manager
 void explosionRunner(){
- //use a for loop to go through each explosion
+ //Go through each explosion
   for (int i = 0; i<explosions.size();i++){
     //make a temp explosion variable 
     Explosion e = explosions.get(i);
@@ -226,69 +327,43 @@ void explosionRunner(){
   } 
 }
 
-
-void bulletRunner(){
- //Use a for loop to go through each player 1 bullet.
-  for (int i = 0; i<bullets1.size(); i++){
-    Bullet bb1 = bullets1.get(i);
-    bb1.update();
-    bb1.draw();
-    if ((bb1.pos.y > height)||(bb1.pos.x > width)|| (bb1.pos.x < 0)){
-      bb1.deactivate();
-      bullets1.remove(bb1);
-    }
-    if(hitDetect(bb1.pos, turret1.pos, 10,80)){
-      explode(turret1.pos,160,1);
-      turret1.takeDamage();
-      bb1.deactivate();
-      bullets1.remove(bb1);
-    }
-    if(hitDetect(bb1.pos, turret2.pos, 10,80)){
-      explode(turret2.pos,160,1);
-      turret2.takeDamage();
-      bb1.deactivate();
-      bullets1.remove(bb1);
-    }
-    if(hitDetect(bb1.pos, powerup.pos, 10, powerup.siz.x)){
-      powerup.activated1 = true;
-      powerup.deactivate();
+//Tracer Class Manager
+void tracerRunner(){
+  //Go through each tracer
+  for (int i = 0; i<tracer1.size(); i++){
+    Tracer t1 = tracer1.get(i);
+    t1.update();
+    t1.draw();
+    if (t1.pos.y == height){
+      check1 = false;
     }
   }
-  //Use a for loop to go through each player 2 bullet.
-  for (int i = 0; i<bullets2.size(); i++){
-    Bullet bb2 = bullets2.get(i);
-    bb2.update();
-    bb2.draw();
-    if ((bb2.pos.y > height)||(bb2.pos.x > width)|| (bb2.pos.x < 0)){
-      bb2.deactivate();
-      bullets1.remove(bb2);
+  
+  for (int x = 0; x<tracer2.size(); x++){
+    Tracer t2 = tracer2.get(x);
+    t2.update();
+    t2.draw();
+    if (t2.pos.y == height){
+      check2 = false;
     }
-    if(hitDetect(bb2.pos, turret1.pos, 10,80)){
-      explode(turret1.pos,160,1);
-      turret1.takeDamage();
-      bb2.deactivate();
-      bullets2.remove(bb2);
-    }
-    if(hitDetect(bb2.pos, turret2.pos, 10,80)){
-      explode(turret2.pos,160,1);
-      turret2.takeDamage();
-      bb2.deactivate();
-      bullets2.remove(bb2);
-    }
-    if(hitDetect(bb2.pos, powerup.pos, 10,powerup.siz.x)){
-      powerup.activated2 = true;
-      powerup.deactivate();
-    }
-  } 
+  }
+  //If the check variable is true, run it.
+  if (check1 == true){
+    tracer1.add(new Tracer(turret1.pos, turret1.dir));
+  }
+  if (check2 == true){
+    tracer2.add(new Tracer(turret2.pos, turret2.dir));
+  }
 }
 
-
+//Turret Class Manager
 void turretRunner(){
+  //Update, draw and check if the turret is alive
   turret1.update();
   turret1.draw();
   turret2.update();
   turret2.draw();  
-  
+    
   if (turret1.isAlive == 0){
     Dead.play(0);
     delay(3000);
@@ -301,11 +376,14 @@ void turretRunner(){
   }  
 }
 
+//Update and draw the powerup
 void powerupRunner(){
  powerup.update();
  powerup.draw();
 }
 
+
+//Keypressed manager
 void inGameKeyPressedManager(){
   if (keyPressed){
     if (key == 'a' && turret1.pos.x > 25){
@@ -315,14 +393,12 @@ void inGameKeyPressedManager(){
       turret1.pos.x += 10;
     }
     else if (key == 'w'){
-      //aim up;
-      
+      //aim up       //------------this needs work------------------
     }
     else if (key == 's'){
-      //aim down
+      //aim down    //-------------this needs work------------------
     }
-    
-    
+    //---------------------------------------------------------------
     if (keyCode == LEFT && turret2.pos.x > (width/2)+25+25){
       turret2.pos.x -= 10;
     }
@@ -330,14 +406,16 @@ void inGameKeyPressedManager(){
       turret2.pos.x += 10;
     }
     else if (keyCode == UP){
-      //aim up;
+      //aim up      //------------this needs work------------------
     }
     else if (keyCode == DOWN){
-      //aim down
+      //aim down    //------------this needs work------------------
     }
   }
 }
 
+
+//Manages the different cases for outcomes. 
 void gameOverManager(){
  if (turret1.health > turret2.health){
    gameState = 2;
@@ -368,6 +446,8 @@ void keyPressed(){
       turret1Ammo++;
       }
     }
+    //Turn tracer1 on.
+    check1 = true;
   }
   
   if (keyCode == ENTER){
@@ -377,14 +457,18 @@ void keyPressed(){
       turret2Ammo++;
       }
     }
+    //Turn tracer2 on.
+    check2 = true;
   }
 }
   
+  //Timer function using millis()
   int timer(int len) {
     int timeLeft = len-millis();
     return timeLeft/1000;
   }
   
+  //Explode function to run the animation and sound.
   void explode(PVector pos,int siz, int sound){
     if (sound == 1){
       Shoot.play(0);

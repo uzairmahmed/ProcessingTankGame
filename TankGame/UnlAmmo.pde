@@ -1,3 +1,7 @@
+/*
+Uzair - Unlimited Ammo Powerup Class
+*/
+
 class UnlAmmo{
   PVector pos = new PVector();
   PVector siz = new PVector();

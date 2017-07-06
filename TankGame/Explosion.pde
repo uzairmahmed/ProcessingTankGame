@@ -1,3 +1,8 @@
+/*
+Mr. Rowbottom's Explosion class
+*/
+
+
 class Explosion{
 
   PImage[] images ;

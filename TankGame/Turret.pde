@@ -1,3 +1,7 @@
+/*
+Uzair - Turret Class
+*/
+
 class Turret{
   PVector pos   = new PVector();
   PVector dir   = new PVector();
@@ -31,14 +35,12 @@ class Turret{
   
   void draw(){
     //base
-    //fill(turretColorR*health,turretColorG*health,turretColorB*health);
     fill(turretColorR,turretColorG,turretColorB);
     ellipse(pos.x, pos.y, 40, 40);
     //terminalArm
     strokeWeight(5);
     line(pos.x, pos.y, pos.x + dir.x, pos.y + dir.y);
     //dotSight
-    //fill(turretColorR*health,turretColorG*health,turretColorB*health);
     fill(turretColorR,turretColorG,turretColorB);
     ellipse(pos.x + dir.x, pos.y + dir.y, 10, 10);
     

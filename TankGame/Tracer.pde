@@ -1,33 +1,29 @@
-/* 
-Uzair - Bullet Class
+/*
+Uzair - Tracer Class
 */
 
-class Bullet{
+class Tracer{
   PVector pos   = new PVector();
   PVector tPos  = new PVector();
   PVector vel   = new PVector();
   PVector dir   = new PVector();
   PVector grav  = new PVector(0,2.23);
+  ArrayList <Tracer> tracerPath;
   
-  ArrayList <Bullet> bullets;
-  public Bullet(PVector turretPos, PVector turretDir){
+  public Tracer(PVector turretPos, PVector turretDir){
     tPos = turretPos;
     dir = turretDir;
-    
     pos.set(tPos);
     vel.set(dir);
   }
-  
   void update(){
     vel.add(grav);
     pos.add(vel);
   }
-  
   void draw(){
-     fill(0, 255, 0);
-     ellipse(pos.x, pos.y, 10, 10); 
+     fill(255);
+     ellipse(pos.x, pos.y, 2, 2); 
   }
-  
   void deactivate(){
     pos.set(-1000 ,-1000);
     vel.set(0,0);

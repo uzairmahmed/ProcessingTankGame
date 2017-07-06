@@ -22,13 +22,11 @@ class Block{
     pos = new PVector(width/2, -500);
     blockSize = new PVector (50,50);
     health = 4;
-    //pos = new PVector(width/2, width  - siz.y/2); //starts at the bottom
   }
   
    void update(){
        vel.add(acc);
        pos.add(vel);
-       //pos = new PVector(width/2, height  - (blocks.size() - blocks.indexOf(this)-1)* siz.y - siz.y/2);       //handles adding blocks from the bottom on top of each other
    }
    
    boolean check(){
