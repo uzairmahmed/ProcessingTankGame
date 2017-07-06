@@ -17,7 +17,7 @@ class Explosion{
   }
  
   void draw(){
-    
+
     image(images[currentFrame], pos.x,pos.y+10, siz.x*scale, siz.y*scale);
   }
 

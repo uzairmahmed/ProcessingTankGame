@@ -1,28 +1,32 @@
-class Bullet {
+class Bullet{
+  PVector pos   = new PVector();
+  PVector tPos  = new PVector();
+  PVector vel   = new PVector();
+  PVector dir   = new PVector();
+  PVector grav  = new PVector(0,1.5);
   
-  PVector pos = new PVector(-1000,-1000);
-  PVector vel = new PVector();
-  PVector acc = new PVector(0,1);  
-  PVector siz = new PVector(10,10);
-  
-  ArrayList<Bullet> bullets;
-  
-  public Bullet (){
+  ArrayList <Bullet> bullets;
+  public Bullet(PVector turretPos, PVector turretDir){
+    tPos = turretPos;
+    dir = turretDir;
+    
+    pos.set(tPos);
+    vel.set(dir);
   }
   
   void update(){
-    if (pos.x != -1000){
-      vel.add(acc);
-      pos.add(vel);
-    }
-  }
-  void draw(){
-    fill(0);
-    ellipse(pos.x, pos.y, siz.x,siz.y);
+    vel.add(grav);
+    pos.add(vel);
   }
   
-  void delete(){
-   pos.set(-1000,-1000); 
+  void draw(){
+     fill(0, 255, 0);
+     ellipse(pos.x, pos.y, 10, 10); 
   }
-}
+  
+  void deactivate(){
+    pos.set(-1000 ,-1000);
+    vel.set(0,0);
+    grav.set(0,0);
+  }
 }

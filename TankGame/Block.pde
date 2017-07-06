@@ -7,9 +7,12 @@ class Block{
   PVector pos;
   PVector vel;
   PVector acc;
+  PVector blockSize;
   
   float g = 1;
   int health;
+  int blockColorR = 50; int blockColorG = 50; int blockColorB = 50;
+
   ArrayList<Block> blocks;// = new ArrayList<Block>();; 
   
   public Block (ArrayList<Block> b){
@@ -17,7 +20,8 @@ class Block{
     vel = new PVector();
     acc = new PVector (0, g);
     pos = new PVector(width/2, -500);
-    health = blockHelth;
+    blockSize = new PVector (50,50);
+    health = 4;
     //pos = new PVector(width/2, width  - siz.y/2); //starts at the bottom
   }
   
@@ -36,7 +40,7 @@ class Block{
    }
 
    void draw(){ 
-      fill(blockColor*health,blockColorG*health,blockColorB*health);
+      fill(blockColorR*health,blockColorG*health,blockColorB*health);
       rect(pos.x, pos.y, blockSize.x, blockSize.y, 4);
    }
    
