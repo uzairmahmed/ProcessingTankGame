@@ -7,7 +7,8 @@ class Bullet{
   PVector tPos  = new PVector();
   PVector vel   = new PVector();
   PVector dir   = new PVector();
-  PVector grav  = new PVector(0,2.23);
+  PVector grav  = new PVector(0,2);
+  float gravMult = 0;
   
   ArrayList <Bullet> bullets;
   public Bullet(PVector turretPos, PVector turretDir){
@@ -19,6 +20,7 @@ class Bullet{
   }
   
   void update(){
+    grav.y += (gravMult);
     vel.add(grav);
     pos.add(vel);
   }

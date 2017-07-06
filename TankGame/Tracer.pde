@@ -1,32 +1,34 @@
 /*
 Uzair - Tracer Class
-*/
+ */
 
-class Tracer{
+class Tracer {
   PVector pos   = new PVector();
   PVector tPos  = new PVector();
   PVector vel   = new PVector();
   PVector dir   = new PVector();
-  PVector grav  = new PVector(0,2.23);
+  PVector grav  = new PVector(0, 2.23);
   ArrayList <Tracer> tracerPath;
-  
-  public Tracer(PVector turretPos, PVector turretDir){
+  float gravMult = 0;
+
+  public Tracer(PVector turretPos, PVector turretDir) {
     tPos = turretPos;
     dir = turretDir;
     pos.set(tPos);
     vel.set(dir);
   }
-  void update(){
+  void update() {
+    grav.y -= (gravMult);
     vel.add(grav);
     pos.add(vel);
   }
-  void draw(){
-     fill(255);
-     ellipse(pos.x, pos.y, 2, 2); 
+  void draw() {
+    fill(0);
+    ellipse(pos.x, pos.y, 3, 3);
   }
-  void deactivate(){
-    pos.set(-1000 ,-1000);
-    vel.set(0,0);
-    grav.set(0,0);
+  void deactivate() {
+    pos.set(-1000, -1000);
+    vel.set(0, 0);
+    grav.set(0, 0);
   }
 }

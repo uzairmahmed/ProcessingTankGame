@@ -34,7 +34,7 @@ class Turret{
   }
   
   void draw(){
-    print (dir + "\n");
+    //print (dir + "\n");
     //base
     fill(turretColorR,turretColorG,turretColorB);
     ellipse(pos.x, pos.y, 40, 40);
