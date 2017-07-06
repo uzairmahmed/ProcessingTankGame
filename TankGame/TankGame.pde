@@ -1,5 +1,5 @@
 /*
-U Version 1.2 - SUMMATIVE EDITION
+U Version 1.1 - SUMMATIVE EDITION
  12 June, 2017
  
  - Use Arrow keys/WASD to move.
@@ -31,8 +31,7 @@ AudioPlayer Launch;
 AudioPlayer Powerup;
 
 //ArrayLists for Blocks, Explosions, and Bullets      
-ArrayList<Block> groundBlocks;
-ArrayList<Block> skyBlocks;
+ArrayList<Block> blocks;
 ArrayList<Explosion> explosions;
 ArrayList<Bullet> bullets1;
 ArrayList<Bullet> bullets2;
@@ -84,13 +83,12 @@ void setup() {
 //Runs once, made to initialize/declare all objects/variables
 void init() {
   //Declare ArrayLists
-  groundBlocks     = new ArrayList<Block>    ();
-  skyBlocks        = new ArrayList<Block>    ();
-  explosions       = new ArrayList<Explosion>();
-  bullets1         = new ArrayList<Bullet>   ();
-  bullets2         = new ArrayList<Bullet>   ();
-  tracer1          = new ArrayList<Tracer>   ();
-  tracer2          = new ArrayList<Tracer>   ();
+  blocks     = new ArrayList<Block>    ();
+  explosions = new ArrayList<Explosion>();
+  bullets1   = new ArrayList<Bullet>   ();
+  bullets2   = new ArrayList<Bullet>   ();
+  tracer1    = new ArrayList<Tracer>   ();
+  tracer2    = new ArrayList<Tracer>   ();
 
   //Load Explosion Images 
   explosion = new PImage[6];
@@ -115,7 +113,6 @@ void init() {
   //Initialize Chargers
   shotCharge1 = new ChargeMeter(new PVector(10, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
   shotCharge2 = new ChargeMeter(new PVector(width-20, 50), new PVector(10, 100), color(255, 0, 255), 0.75);
-  
   jumpCharge1 = new ChargeMeter(new PVector(30, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
   jumpCharge2 = new ChargeMeter(new PVector(width-50, 50), new PVector(10, 100), color(0, 255, 255), 0.5);
 
@@ -214,25 +211,25 @@ void end3() {
 //Block Class Manager
 void blockRunner() {
   //Go through each block 
-  for (int i = 0; i < groundBlocks.size(); i++) {
+  for (int i = 0; i < blocks.size(); i++) {
     //Make a Block reference
-    Block gb = groundBlocks.get(i);
+    Block b = blocks.get(i);
     //Update block
-    gb.update();
+    b.update();
     //Check block 
-    gb.check();
+    b.check();
     //Draw block
-    gb.draw();
+    b.draw();
 
     //Go through each bullet1 to check if it has hit the block in question.
     for (int j = 0; j<bullets1.size(); j++) {
       //Make a Bullet Reference
       Bullet bbcheck1 = bullets1.get(j);
       //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck1.pos, gb.pos, 10, 100)) {
+      if (hitDetect(bbcheck1.pos, b.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
-        gb.takeDamage();
+        explode(b.pos, 100, 2);
+        b.takeDamage();
         bbcheck1.deactivate();
         bullets1.remove(bbcheck1);
         delay(10);
@@ -244,103 +241,20 @@ void blockRunner() {
       //Make a Bullet Reference
       Bullet bbcheck2 = bullets2.get(k);
       //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck2.pos, gb.pos, 10, 100)) {
+      if (hitDetect(bbcheck2.pos, b.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
-        gb.takeDamage();
+        explode(b.pos, 100, 2);
+        b.takeDamage();
         bbcheck2.deactivate();
         bullets2.remove(bbcheck2);
         delay(10);
       }
     }
   }
-    //Go through each block 
-  for (int i = 0; i < groundBlocks.size(); i++) {
-    //Make a Block reference
-    Block gb = groundBlocks.get(i);
-    //Update block
-    gb.update();
-    //Check block 
-    gb.check();
-    //Draw block
-    gb.draw();
-
-    //Go through each bullet1 to check if it has hit the block in question.
-    for (int j = 0; j<bullets1.size(); j++) {
-      //Make a Bullet Reference
-      Bullet bbcheck1 = bullets1.get(j);
-      //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck1.pos, gb.pos, 10, 100)) {
-        //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
-        gb.takeDamage();
-        bbcheck1.deactivate();
-        bullets1.remove(bbcheck1);
-        delay(10);
-      }
-    }
-
-    //Go through each bullet2 to check if it has hit the block in question.
-    for (int k = 0; k<bullets2.size(); k++) {
-      //Make a Bullet Reference
-      Bullet bbcheck2 = bullets2.get(k);
-      //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck2.pos, gb.pos, 10, 100)) {
-        //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
-        gb.takeDamage();
-        bbcheck2.deactivate();
-        bullets2.remove(bbcheck2);
-        delay(10);
-      }
-    }
-  }
- //Go through each block 
-  for (int i = 0; i < skyBlocks.size(); i++) {
-    //Make a Block reference
-    Block sb = skyBlocks.get(i);
-    //Update block
-    sb.update();
-    //Check block 
-    sb.check();
-    //Draw block
-    sb.draw();
-
-    //Go through each bullet1 to check if it has hit the block in question.
-    for (int j = 0; j<bullets1.size(); j++) {
-      //Make a Bullet Reference
-      Bullet bbcheck1 = bullets1.get(j);
-      //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck1.pos, sb.pos, 10, 100)) {
-        //Run animation, take block damage, deactivate bullet.
-        explode(sb.pos, 100, 2);
-        sb.takeDamage();
-        bbcheck1.deactivate();
-        bullets1.remove(bbcheck1);
-        delay(10);
-      }
-    }
-
-    //Go through each bullet2 to check if it has hit the block in question.
-    for (int k = 0; k<bullets2.size(); k++) {
-      //Make a Bullet Reference
-      Bullet bbcheck2 = bullets2.get(k);
-      //Check for Hitdetection between the Block and Bullet
-      if (hitDetect(bbcheck2.pos, sb.pos, 10, 100)) {
-        //Run animation, take block damage, deactivate bullet.
-        explode(sb.pos, 100, 2);
-        sb.takeDamage();
-        bbcheck2.deactivate();
-        bullets2.remove(bbcheck2);
-        delay(10);
-      }
-    }
-  }
-  
   //Spawn new blocks if blockList is empty.
-  if (groundBlocks.size() == 0) {
+  if (blocks.size() == 0) {
     for (int i = 0; i <= 3; i++) {
-      groundBlocks.add(new Block(groundBlocks));
+      blocks.add(new Block(blocks));
     }
   }
 }
