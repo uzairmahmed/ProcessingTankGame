@@ -84,14 +84,24 @@ class Turret {
         pos.y = height;
         move = false;
       }
-     if (pos.x < 0){
-       pos.x = 0;
-       dir.x*=-1;
-     }
-     if (pos.x > width){
-       pos.x = width;
-       dir.x*=-1;
-     }
+      if (fieldSide == 0) {
+        if (pos.x < 0) {
+          pos.x = 0;
+          dir.x*=-1;
+        } else if (pos.x > width/2-50) {
+          pos.x = width/2-50;
+          dir.x*=-1;
+        }
+      }
+      if (fieldSide == 1) {
+        if (pos.x > width) {
+          pos.x = width;
+          dir.x*=-1;
+        } else if (pos.x < width/2+50) {
+          pos.x = width/2+50;
+          dir.x*=-1;
+        }
+      }
     }
   }
 

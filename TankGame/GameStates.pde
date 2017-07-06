@@ -38,12 +38,14 @@ void game() {
   //Manager for all things respective to thier names.
   blockRunner();
   explosionRunner();
-  //tracerRunner(); //<-------------------------------------Comment this line for better performance. 
+  //tracerRunner(); //<-------------------------------------Comment this line for MUCH better performance. 
   bulletRunner();
   turretRunner();
   chargeRunner();
   powerupRunner();
   inGameKeyPressedManager();
+  line(26,75,34,75);
+  line(width - 26,75,width - 34,75);
 }
 
 void end1() {

@@ -61,7 +61,6 @@ void blockRunner() {
       //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck1.pos, gb.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
         gb.takeDamage();
         bbcheck1.deactivate();
         bullets1.remove(bbcheck1);
@@ -76,7 +75,6 @@ void blockRunner() {
       //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck2.pos, gb.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(gb.pos, 100, 2);
         gb.takeDamage();
         bbcheck2.deactivate();
         bullets2.remove(bbcheck2);
@@ -102,7 +100,6 @@ void blockRunner() {
       //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck1.pos, sb.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(sb.pos, 100, 2);
         sb.takeDamage();
         bbcheck1.deactivate();
         bullets1.remove(bbcheck1);
@@ -117,7 +114,6 @@ void blockRunner() {
       //Check for Hitdetection between the Block and Bullet
       if (hitDetect(bbcheck2.pos, sb.pos, 10, 100)) {
         //Run animation, take block damage, deactivate bullet.
-        explode(sb.pos, 100, 2);
         sb.takeDamage();
         bbcheck2.deactivate();
         bullets2.remove(bbcheck2);
@@ -224,12 +220,14 @@ void tracerRunner() {
   //Go through each tracer
   for (int i = 0; i<tracer1.size(); i++) {
     Tracer t1 = tracer1.get(i);
+    t1.grav.y-= 0.5*(shotCharge1.getCharge());
     t1.update();
     t1.draw();
   }
 
   for (int x = 0; x<tracer2.size(); x++) {
     Tracer t2 = tracer2.get(x);
+    t2.grav.y-= 0.5*(shotCharge2.getCharge());
     t2.update();
     t2.draw();
   }
@@ -245,6 +243,7 @@ void turretRunner() {
   turret1.switchPositions();
   turret1.draw();
   turret2.update();
+  turret2.switchPositions();
   turret2.draw();  
 
   if (turret1.isAlive == 0) {

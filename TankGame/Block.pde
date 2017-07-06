@@ -63,6 +63,7 @@ class Block {
   void takeDamage() {
     if (health < 1) {
       blocks.remove(this);
+      explode(pos, 100, 2);
     } else {
       health--;
     }

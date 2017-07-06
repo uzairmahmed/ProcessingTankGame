@@ -83,7 +83,7 @@ class ChargeMeter {
       if (getCharge() > 0.0) {
         chargeCol = color(255, 0, 0);
       }
-      if (getCharge() > 0.5) {
+      if (0.3 <= getCharge() && getCharge() <= 0.7) {
         chargeCol = color(0, 255, 0);
       }
       if (getCharge() > 0.75) {
