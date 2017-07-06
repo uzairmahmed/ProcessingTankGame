@@ -61,11 +61,17 @@ void init() {
   Shoot = minim.loadFile("shoot.wav");
   
   //Declare PVectors
+  pVel = new PVector();
+
   mPos1 = new PVector();
   tPos1 = new PVector(width/8, height);
   pPos1 = new PVector(-1000, -1000);
-  tDir1 = new PVector(); //
-  pVel = new PVector();
+  tDir1 = new PVector(0,0);
+  
+  mPos2 = new PVector();
+  tPos2 = new PVector(width/8, height);
+  pPos2 = new PVector(-1000, -1000);
+  tDir2 = new PVector(0,0);
 }
 
 //HitDetect Function Made by Mr. Rowbottom 
@@ -75,21 +81,38 @@ boolean hitDetect(PVector pos1, PVector pos2, float size1, float size2){
 
 //Runs when Mouse is Pressed -- WILL BE REPLACED
 void mousePressed(){
-  // Declare Explosion Size and Position
-  PVector eSiz = new PVector (200, 200);
-  PVector ePos = new PVector (tPos1.x + tDir1.x + (tDir1.x/2), tPos1.y + tDir1.y+(tDir1.y/2));
 
-  //EXPLODE STUFF
-  explosions.add(new Explosion(ePos, eSiz, explosion));
-  Shoot.play(0);
-  
-  //Launch Projectile
-  pPos1.set(tPos1);
-  pVel.set(tDir1);
 }
 
 
 void keyPressed(){
+  if (keyCode == ' '){
+    // Declare Explosion Size and Position
+    PVector eSiz = new PVector (200, 200);
+    PVector ePos = new PVector (tPos1.x + tDir1.x + (tDir1.x/2), tPos1.y + tDir1.y+(tDir1.y/2));
+  
+    //EXPLODE STUFF
+    explosions.add(new Explosion(ePos, eSiz, explosion));
+    Shoot.play(0);
+    
+    //Launch Projectile
+    pPos1.set(tPos1);
+    pVel.set(tDir1);
+  }
+  
+  if (keyCode == ENTER){
+    // Declare Explosion Size and Position
+    PVector eSiz = new PVector (200, 200);
+    PVector ePos = new PVector (tPos2.x + tDir2.x + (tDir2.x/2), tPos2.y + tDir2.y+(tDir2.y/2));
+  
+    //EXPLODE STUFF
+    explosions.add(new Explosion(ePos, eSiz, explosion));
+    Shoot.play(0);
+    
+    //Launch Projectile
+    pPos2.set(tPos2);
+    pVel.set(tDir2);
+  }
 }
 
 void draw() {
@@ -110,6 +133,12 @@ void draw() {
       pPos1.set(-1000,-1000);
       delay(10);
     }
+    if (hitDetect(pPos2, b.pos, 10, 100)){
+      b.takeDamage();
+      pPos2.set(-1000,-1000);
+      delay(10);
+    }
+    
   }
   //use a for loop to go through each explosion
   for (int i = 0; i<explosions.size();i++){
@@ -124,35 +153,80 @@ void draw() {
     }
   }
   
-  if (keyPressed){
+  if (pPos1.x!= -1000) {
+    pVel.add((grav));
+    pPos1.add(pVel);
+  }
+  
+  if (pPos2.x!= -1000) {
+    pVel.add((grav));
+    pPos2.add(pVel);
+  }
+  
+  mPos1.set(mouseX, mouseY);
+  tDir1 = PVector.sub(mPos1,tPos1);
+  tDir1.normalize();
+  tDir1.mult(50);  
+ 
+  mPos2.set(mouseX, mouseY);
+  tDir2 = PVector.sub(mPos2,tPos2);
+  tDir2.normalize();
+  tDir2.mult(50);  
+ 
+  //circle
+  fill(255,0,0);
+  ellipse(tPos1.x, tPos1.y, 40, 40);
+  //terminalArm
+  strokeWeight(5);
+  line(tPos1.x, tPos1.y, tPos1.x + tDir1.x, tPos1.y + tDir1.y);
+  //dotSight
+  fill(255, 0, 0);
+  ellipse(tPos1.x + tDir1.x, tPos1.y + tDir1.y, 10, 10);
+  //bullet
+  ellipse(pPos1.x, pPos1.y, 10, 10);
+  
+  
+  //circle
+  fill(255,0,0);
+  ellipse(tPos2.x, tPos2.y, 40, 40);
+  //terminalArm
+  strokeWeight(5);
+  line(tPos2.x, tPos2.y, tPos2.x + tDir2.x, tPos2.y + tDir2.y);
+  //dotSight
+  fill(255, 0, 0);
+  ellipse(tPos2.x + tDir2.x, tPos2.y + tDir2.y, 10, 10);
+  //bullet
+  ellipse(pPos2.x, pPos2.y, 10, 10);
+  
+  
+  
+ if (keyPressed){
     if (key == 'a' && tPos1.x > 9){
       tPos1.x -= 10;
     }
     else if (key == 'd'&& tPos1.x < width-9){
       tPos1.x += 10;
     }
-    else if (key == 'w' && tPos1.y > 9){
-      tPos1.y -= 10;
-    }
-    else if (key == 's'&& tPos1.y < height-9){
-      tPos1.y += 10;
-    }
-  }
-  if (pPos1.x!= -1000) {
-    pVel.add((grav));
-    pPos1.add(pVel);
-  }
-  mPos1.set(mouseX, mouseY);
-  tDir1 = PVector.sub(mPos1, tPos1);
-  tDir1.normalize();
-  tDir1.mult(50);  
+    else if (key == 'w'){
+      //tPos1.y -= 100;
       
-  fill(255);
-  ellipse(tPos1.x, tPos1.y, 40, 40);
-  strokeWeight(5);
-  line(tPos1.x, tPos1.y, tPos1.x + tDir1.x, tPos1.y + tDir1.y);
-  fill(255, 0, 0);
-  ellipse(tPos1.x + tDir1.x, tPos1.y + tDir1.y, 10, 10);
-  //bullet
-  ellipse(pPos1.x, pPos1.y, 10, 10);
+    }
+    else if (key == 's'){
+      //tPos1.y += 100;
+    }
+    
+    
+    if (keyCode == LEFT && tPos1.x > 9){
+      tPos2.x -= 10;
+    }
+    else if (keyCode == RIGHT && tPos1.x < width-9){
+      tPos2.x += 10;
+    }
+    else if (keyCode == UP){
+      //tPos2.y -= 100;
+    }
+    else if (keyCode == DOWN){
+      //tPos2.y += 100;
+    }
+  }
 }
