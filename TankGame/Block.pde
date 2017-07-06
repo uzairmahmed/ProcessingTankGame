@@ -11,7 +11,7 @@ class Block{
   
   float g = 1;
   int health;
-  int blockColorR = 50; int blockColorG = 50; int blockColorB = 50;
+  int blockColorR = 255; int blockColorG = 32; int blockColorB = 32;
 
   ArrayList<Block> blocks;// = new ArrayList<Block>();; 
   

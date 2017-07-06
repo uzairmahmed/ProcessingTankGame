@@ -3,7 +3,7 @@ class Bullet{
   PVector tPos  = new PVector();
   PVector vel   = new PVector();
   PVector dir   = new PVector();
-  PVector grav  = new PVector(0,1.5);
+  PVector grav  = new PVector(0,2.23);
   
   ArrayList <Bullet> bullets;
   public Bullet(PVector turretPos, PVector turretDir){
